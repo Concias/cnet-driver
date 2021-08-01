@@ -42,6 +42,12 @@ const data = [
     to: `${adminRoot}/blank-page`,
   },
   {
+    id: 'devices',
+    icon: 'iconsminds-bucket',
+    label: 'menu.device-search',
+    to: `${adminRoot}/devices`,
+  },
+  {
     id: 'docs',
     icon: 'iconsminds-library',
     label: 'menu.docs',

@@ -10,7 +10,7 @@ Table of Contents
 
 module.exports = {
   /* 01.General */
-  'general.copyright': 'Gogo React © 2018 All Rights Reserved.',
+  'general.copyright': 'CNET © 2021 All Rights Reserved.',
 
   "unauthorized.title": "Unauthorized Access Attempt",
   "unauthorized.detail": "You are not authorized to view the page you are trying to access.",
@@ -46,6 +46,7 @@ module.exports = {
   'menu.docs': 'Docs',
   'menu.blank-page': 'Blank Page',
   'menu.dashboard': 'Dashboard',
+  'menu.device-search': 'Find Device',
   /* 04.Error Page */
   'pages.error-title': 'Ooops... looks like an error occurred!',
   'pages.error-code': 'Error code',

@@ -17,7 +17,9 @@ const BlankPage = React.lazy(() =>
 const Dashboard = React.lazy(() =>
   import(/* webpackChunkName: "vi-dashbaord" */ './dashboard')
 );
-
+const DeviceSearch = React.lazy(() =>
+  import(/* webpackChunkName: "vi-device-search" */ './device-search')
+);
 const App = ({ match }) => {
   return (
     <AppLayout>
@@ -41,6 +43,10 @@ const App = ({ match }) => {
             <Route
               path={`${match.url}/blank-page`}
               render={(props) => <BlankPage {...props} />}
+            />
+            <Route
+              path={`${match.url}/devices`}
+              render={(props) => <DeviceSearch {...props} />}
             />
              <Route
               path={`${match.url}/dashboard`}
