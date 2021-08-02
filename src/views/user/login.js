@@ -65,6 +65,7 @@ const Login = ({ history, loading, error, loginUserAction }) => {
         <Card className="auth-card">
           <div className="position-relative image-side ">
             <p className="text-white h2">{systemName}</p>
+            <p className="text-white h4">Driver's Behaviour Reporting System</p>
             <p className="white mb-0">
               Please use your credentials to login.
               <br />
@@ -72,7 +73,6 @@ const Login = ({ history, loading, error, loginUserAction }) => {
               <NavLink to="/user/register" className="white">
                 register
               </NavLink> */}
-              .
             </p>
           </div>
           <div className="form-side">
