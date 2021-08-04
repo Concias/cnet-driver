@@ -61,11 +61,13 @@ class App extends React.Component {
             <Suspense fallback={<div className="loading" />}>
               <Router>
                 <Switch>
+                <Redirect exact from="/" to={adminRoot} />
                   <ProtectedRoute
                     path={adminRoot}
                     component={ViewApp}
                    // roles={[UserRole.Admin, UserRole.Editor]}
                   />
+                    
                   <Route
                     path="/user"
                     render={(props) => <ViewUser {...props} />}
@@ -80,14 +82,14 @@ class App extends React.Component {
                     exact
                     render={(props) => <ViewUnauthorized {...props} />}
                   />
-                  <Route
+                  {/* <Route
                     path="/"
                     exact
                     render={(props) => <ViewHome {...props} />}
-                  />
-                  {/*
-                  <Redirect exact from="/" to={adminRoot} />
-                  */}
+                  /> */}
+                  
+                 
+                 
                   <Redirect to="/error" />
                 </Switch>
               </Router>

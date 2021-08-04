@@ -47,8 +47,13 @@ module.exports = {
   'menu.blank-page': 'Blank Page',
   'menu.dashboard': 'Dashboard',
   'menu.device-search': 'Find Device',
+  'menu.devices': 'Find Device',
+  'menu.device-page': 'Device',
   /* 04.Error Page */
   'pages.error-title': 'Ooops... looks like an error occurred!',
   'pages.error-code': 'Error code',
   'pages.go-back-home': 'GO BACK HOME',
+/* 05.Error Page */
+  'devices': 'Devices'
+
 };

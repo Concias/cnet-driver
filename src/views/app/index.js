@@ -20,6 +20,9 @@ const Dashboard = React.lazy(() =>
 const DeviceSearch = React.lazy(() =>
   import(/* webpackChunkName: "vi-device-search" */ './device-search')
 );
+const DevicePage = React.lazy(() =>
+  import(/* webpackChunkName: "vi-device-page" */ './device-page')
+);
 const App = ({ match }) => {
   return (
     <AppLayout>
@@ -47,6 +50,10 @@ const App = ({ match }) => {
             <Route
               path={`${match.url}/devices`}
               render={(props) => <DeviceSearch {...props} />}
+            />
+             <Route
+              path={`${match.url}/device-page`}
+              render={(props) => <DevicePage {...props} />}
             />
              <Route
               path={`${match.url}/dashboard`}

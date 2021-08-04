@@ -34,7 +34,7 @@ import TopnavEasyAccess from './Topnav.EasyAccess';
 import TopnavNotifications from './Topnav.Notifications';
 import TopnavDarkSwitch from './Topnav.DarkSwitch';
 
-import { getDirection, setDirection } from '../../helpers/Utils';
+import { getDirection, setDirection, setCurrentUser } from '../../helpers/Utils';
 
 const TopNav = ({
   intl,
@@ -175,6 +175,8 @@ const TopNav = ({
 
   const handleLogout = () => {
     console.log('logout');
+    setCurrentUser(null);
+    window.location.href = '/user/login';
   };
 
   const menuButtonClick = (e, _clickCount, _conClassnames) => {
@@ -271,7 +273,7 @@ const TopNav = ({
         {isDarkSwitchActive && <TopnavDarkSwitch />}
         <div className="header-icons d-inline-block align-middle">
           <TopnavEasyAccess />
-          <TopnavNotifications />
+          {/* <TopnavNotifications /> */}
           <button
             className="header-icon btn btn-empty d-none d-sm-inline-block"
             type="button"
@@ -284,21 +286,29 @@ const TopNav = ({
               <i className="simple-icon-size-fullscreen d-block" />
             )}
           </button>
+          {/* <button
+            className="header-icon btn btn-empty d-none d-sm-inline-block"
+            type="button"
+            id="fullScreenButton"
+            onClick={toggleFullScreen}
+          >
+             <i className="iconsminds-power d-block" /> 
+            </button> */}
         </div>
         <div className="user d-inline-block">
           <UncontrolledDropdown className="dropdown-menu-right">
             <DropdownToggle className="p-0" color="empty">
-              <span className="name mr-1">Sarah Kortney</span>
-              <span>
+              <span className="name mr-1">Welcome User</span>
+              {/* <span>
                 <img alt="Profile" src="/assets/img/profiles/l-1.jpg" />
-              </span>
+              </span> */}
             </DropdownToggle>
             <DropdownMenu className="mt-3" right>
-              <DropdownItem>Account</DropdownItem>
+              {/* <DropdownItem>Account</DropdownItem>
               <DropdownItem>Features</DropdownItem>
               <DropdownItem>History</DropdownItem>
-              <DropdownItem>Support</DropdownItem>
-              <DropdownItem divider />
+              <DropdownItem>Support</DropdownItem> 
+              <DropdownItem divider />*/}
               <DropdownItem onClick={() => handleLogout()}>
                 Sign out
               </DropdownItem>
