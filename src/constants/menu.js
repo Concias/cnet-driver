@@ -47,6 +47,13 @@ const data = [
     label: 'menu.device-search',
     to: `${adminRoot}/devices`,
   },
+  {
+    id: 'schedule-report',
+    icon: 'simple-icon-paper-plane',
+    label: 'menu.schedule-report',
+    to: `${adminRoot}/schedule-report`,
+  },
+  
   // {
   //   id: 'docs',
   //   icon: 'iconsminds-library',

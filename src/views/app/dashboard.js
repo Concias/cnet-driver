@@ -22,7 +22,7 @@ const Dashboard = ({ match }) => {
         pointHoverRadius: 2,
         fill: false,
         borderWidth: 2,
-        data: [1250, 1300, 1550, 921, 1810, 1106, 1610],
+        data: [2150, 1300, 1550, 921, 1810, 1106, 1610],
         datalabels: {
           align: 'end',
           anchor: 'end',
@@ -44,7 +44,7 @@ const Dashboard = ({ match }) => {
         pointHoverRadius: 2,
         fill: false,
         borderWidth: 2,
-        data: [1250, 1300, 1550, 921, 1810, 1106, 1610],
+        data: [2300, 1300, 1550, 921, 1810, 1106, 1610],
         datalabels: {
           align: 'end',
           anchor: 'end',
@@ -66,7 +66,7 @@ const Dashboard = ({ match }) => {
         pointHoverRadius: 2,
         fill: false,
         borderWidth: 2,
-        data: [1250, 1300, 1550, 921, 1810, 1106, 1610],
+        data: [250, 1300, 1550, 921, 1810, 1106, 1610],
         datalabels: {
           align: 'end',
           anchor: 'end',
@@ -88,7 +88,7 @@ const Dashboard = ({ match }) => {
         pointHoverRadius: 2,
         fill: false,
         borderWidth: 2,
-        data: [1250, 1300, 1550, 921, 1810, 1106, 1610],
+        data: [1000, 1300, 1550, 921, 1810, 1106, 1610],
         datalabels: {
           align: 'end',
           anchor: 'end',
@@ -113,42 +113,42 @@ const Dashboard = ({ match }) => {
       </Row> */}
       <Row>
         <Colxx xxs="3" className="mb-4">
-        <Card>
+        <Card color="secondary">
         <CardBody className="text-center">
-          <i className={"simple-icon-rocket"} />
+          <i className={"simple-icon-chart"} />
           <p className="card-text font-weight-semibold mb-0">
             <IntlMessages id={"Total Assets"} />
           </p>
-          <p className="lead text-center">0</p>
+          <p className="lead text-center">450</p>
         </CardBody>
       </Card>
         </Colxx>
         <Colxx xxs="3" className="mb-4">
-        <Card>
+        <Card color="secondary">
         <CardBody className="text-center">
-          <i className={"simple-icon-rocket"} />
+          <i className={"simple-icon-chart"} />
           <p className="card-text font-weight-semibold mb-0">
             <IntlMessages id={"Total Distance"} />
           </p>
-          <p className="lead text-center">0</p>
+          <p className="lead text-center">6,000 km</p>
         </CardBody>
       </Card>
           </Colxx>
           <Colxx xxs="3" className="mb-4">
-          <Card>
+          <Card  color="secondary">
         <CardBody className="text-center">
-          <i className={"simple-icon-rocket"} />
+          <i className={"simple-icon-chart"} />
           <p className="card-text font-weight-semibold mb-0">
             <IntlMessages id={"Total Fuel Consumed"} />
           </p>
-          <p className="lead text-center">0</p>
+          <p className="lead text-center">3000 Litres</p>
         </CardBody>
       </Card>
           </Colxx>
           <Colxx xxs="3" className="mb-4">
-          <Card>
+          <Card inverse color="secondary">
         <CardBody className="text-center">
-          <i className={"simple-icon-rocket"} />
+          <i className={"simple-icon-chart"} />
           <p className="card-text font-weight-semibold mb-0">
             <IntlMessages id={"Total CO2 Emission"} />
           </p>

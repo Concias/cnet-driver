@@ -21,7 +21,10 @@ const DevicePage = (props) => {
     const [deviceData, setDeviceData] = useState({totalActive:0, distance:0, time: "00:00:00"});
     const [fetching, setFetching] = useState(true);
     let currentUser = getCurrentUser();
-
+    useEffect(() => {
+      fetchDeviceHistory();
+   }, []);
+    
     const [ metricsStatus, setMs] = useState([{title:"Speeding Events Count",status: 34,total: 100 },
      {title:"Speeding Time",status: 34,total: 100 },
      {title:"Harsh Breaking Events Count",status: 54,total: 100 },
@@ -58,6 +61,23 @@ const DevicePage = (props) => {
         <Colxx xxs="12">
           <Breadcrumb heading="menu.device-page" match={props.match} />
           <Separator className="mb-4" />
+        </Colxx>
+      </Row>
+      <Row>
+        <Colxx xxs="12">
+        <div
+                                id="printButton"
+                                className="text-zero top-right-button-container"
+                              >
+                                <button
+                                  style={{ cursor: 'pointer' }}
+                                  type="button"
+                              
+                                >
+                                  <i className="simple-icon-printer"></i>
+                                {' '}  Download Driver Summary Report
+                                </button>
+                              </div>
         </Colxx>
       </Row>
       <Row>

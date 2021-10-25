@@ -1,10 +1,9 @@
 import React, { forwardRef, useState, useEffect } from 'react';
-import { Row } from 'reactstrap';
+import { Card, CardBody, Row,Col, Label, FormGroup, Input, Button, CardTitle } from 'reactstrap';
 import { Colxx, Separator } from '../../components/common/CustomBootstrap';
 import Breadcrumb from '../../containers/navs/Breadcrumb';
 import { serverUrl } from '../../constants/defaultValues';
 import MaterialTable from "material-table";
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 import AddBox from '@material-ui/icons/AddBox';
@@ -22,9 +21,10 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
-import VisibilityIcon from "@material-ui/icons/Visibility";
+import Select from 'react-select';
 
 import { getCurrentUser } from '../../helpers/Utils';
+import CardFooter from 'reactstrap/lib/CardFooter';
 
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -46,19 +46,19 @@ const tableIcons = {
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
 };
 
-const DeviceSearch = (props) => {
+const ReportSchedule = (props) => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   let currentUser = getCurrentUser();
   useEffect(() => {
-     fetchDrivers();
+    fetchSchedules();
   }, []);
 
-  const fetchDrivers = () => {
+  const fetchSchedules = () => {
     setIsLoading(true);
     axios.get(
-      `${serverUrl}/devices?user_hash=${currentUser ? currentUser.user_api_hash : ''}`
+      `${serverUrl}/api/report-schedules?user_hash=${currentUser ? currentUser.user_api_hash : ''}`
     )
       .then((res) => {
         return res.data;
@@ -67,27 +67,83 @@ const DeviceSearch = (props) => {
         setIsLoading(false);
         // const items = data.map((x) => x.items);
         // var merged = [].concat.apply([], items);
-        setData(data.map((row) => (
-          {
-            ...row, deviceGroup: row.deviceGroup.name, action: <div> <Link
-              to={{
-                pathname: "/app/device-page",
-                state: {id:row.id, name:row.name, driver_name: row.driverName}
-              }}
-              title={"Click to view driver's performance report"}
-            >
-           <VisibilityIcon /> View 
-            </Link></div>
-          }
-        )));
+        setData(data);
       });
   }
   return (
     <>
       <Row>
         <Colxx xxs="12">
-          <Breadcrumb heading="menu.device-search" match={props.match} />
+          <Breadcrumb heading="menu.report-schedule-search" match={props.match} />
           <Separator className="mb-5" />
+        </Colxx>
+      </Row>
+      <Row className="mb-5">
+      <Colxx xxs="12" >
+        <Card>
+         
+          <CardBody>
+          <CardTitle>Create a New Report Schedule</CardTitle>
+            <Row>
+            <Col md={6}>
+            <FormGroup>
+                                <Label>
+                                    Select Report*
+              </Label>
+              <Select
+                                    className="react-select"
+                                    classNamePrefix="react-select"
+                                    name="report"
+                                    options={[{ label: "Co2 Summary Report", value: "CO2_SUMMARY_REPORT" }, 
+                                    { label: "Fuel Consumption Report", value: "FUEL_CONSUMPTION_REPORT" },
+                                    { label: "Individual Driver Summary Report", value: "INDIVIDUAL_DRIVER_SUMMARY_REPORT" },
+                                    { label: "Score Card Summary Report", value: "SCORE_CARE_SUMMARY_REPORT" }]}
+                                    required
+                                />
+
+              </FormGroup>
+              </Col>
+              <Col md={6}>
+            <FormGroup>
+                                <Label>
+                                    Select Schedule*
+              </Label>
+              <Select
+                                    className="react-select"
+                                    classNamePrefix="react-select"
+                                    name="report"
+                                    options={[{ label: "Daily", value: "DAILY" }, 
+                                    { label: "Weekly", value: "WEEKLY" },
+                                    { label: "Monthly", value: "MONTHLY" }]}
+                                    required
+                                />
+
+              </FormGroup>
+              </Col>
+                        <Col md={12}>
+                            <FormGroup>
+                                <Label>
+                                    Emails*
+              </Label>
+                                <Input
+                                    type="text"
+                                    name="emails"
+                                    id="emails"
+                                    placeholder=" "
+                                    multiple
+                                    required
+                                />
+                            </FormGroup>
+                        </Col>
+                                      
+            </Row>
+          </CardBody>
+          <CardFooter>
+            <Button>
+              Create Report Schedule
+            </Button>
+          </CardFooter>
+        </Card>
         </Colxx>
       </Row>
       <Row>
@@ -99,15 +155,14 @@ const DeviceSearch = (props) => {
         <Colxx xxs="12" className="mb-4">
           <MaterialTable
             icons={tableIcons}
-            title="Device List"
+            title="Report Schedule List"
             columns={[
-              { title: "Device", field: "name", filtering: true },
-              { title: "Driver Name", field: "driverName" },
-              { title: "Fleet Name", field: "deviceGroup" },
-              { title: "Last Date Modified", field: "time" },
-              { title: "", field: "action" },
+              { title: "Report Name", field: "reportName", filtering: true },
+              { title: "Schedule Type", field: "scheduleType" },
+              { title: "Emails", field: "email" },
+              { title: "Date Created", field: "dateCreated" },
             ]}
-           
+
             data={data}
             isLoading={isLoading}
             options={{
@@ -131,4 +186,4 @@ const DeviceSearch = (props) => {
   );
 };
 
-export default DeviceSearch;
+export default ReportSchedule;

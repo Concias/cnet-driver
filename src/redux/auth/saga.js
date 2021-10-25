@@ -63,7 +63,7 @@ function* loginWithEmailPassword({ payload }) {
         history.push(adminRoot);
       }
     } else {
-     // console.log(error.response)
+      console.log(JSON.stringify(error))
       if (error.response.status === 401) {
         yield put(loginUserError('Invalid username / password.'));
       } else if(error.response.data.message){
@@ -73,7 +73,13 @@ function* loginWithEmailPassword({ payload }) {
       }
     }
   } catch (error) {
-    yield put(loginUserError(error.response.data.message));
+    if(error.response && error.response.message){
+      yield put(loginUserError(error.response.message));
+    } else if(error.response && error.response.data && error.response.data.message){
+      yield put(loginUserError(error.response.data.message));
+    } else {
+      yield put(loginUserError('Could not reach server, please try again later.'));
+    }
   }
 }
 

@@ -23,6 +23,9 @@ const DeviceSearch = React.lazy(() =>
 const DevicePage = React.lazy(() =>
   import(/* webpackChunkName: "vi-device-page" */ './device-page')
 );
+const ReportSchedule = React.lazy(() =>
+  import(/* webpackChunkName: "vi-device-page" */ './report-schedule')
+);
 const App = ({ match }) => {
   return (
     <AppLayout>
@@ -59,6 +62,12 @@ const App = ({ match }) => {
               path={`${match.url}/dashboard`}
               render={(props) => <Dashboard {...props} />}
             />
+            <Route
+              path={`${match.url}/schedule-report`}
+              render={(props) => <ReportSchedule {...props} />}
+            />
+
+
             <Redirect to="/error" />
           </Switch>
         </Suspense>

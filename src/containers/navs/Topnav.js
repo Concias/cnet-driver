@@ -264,10 +264,10 @@ const TopNav = ({
           </UncontrolledDropdown>
         </div>
       </div>
-      <NavLink className="navbar-logo" to={adminRoot}>
+      {/* <NavLink className="navbar-logo" to={adminRoot}>
         <span className="logo d-none d-xs-block" />
         <span className="logo-mobile d-block d-xs-none" />
-      </NavLink>
+      </NavLink> */}
 
       <div className="navbar-right">
         {isDarkSwitchActive && <TopnavDarkSwitch />}

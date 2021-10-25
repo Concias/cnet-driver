@@ -49,6 +49,8 @@ module.exports = {
   'menu.device-search': 'Find Device',
   'menu.devices': 'Find Device',
   'menu.device-page': 'Device',
+  'menu.schedule-report': 'Schedule Report',
+  'menu.report-schedule-search': 'Schedule Report',
   /* 04.Error Page */
   'pages.error-title': 'Ooops... looks like an error occurred!',
   'pages.error-code': 'Error code',
