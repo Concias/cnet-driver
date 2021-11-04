@@ -1,0 +1,170 @@
+import React, { useState } from 'react';
+import { Card, CardBody, CardTitle, Row, Modal, ModalBody, ModalHeader, Col, Label, FormGroup, Input, ModalFooter, Button, Form } from 'reactstrap'; //
+import Select from 'react-select';
+import { Colxx } from '../../../components/common/CustomBootstrap';
+import axios from 'axios';
+import moment from "moment";
+import { serverUrl } from '../../../constants/defaultValues';
+import { getCurrentUser } from '../../../helpers/Utils';
+import {toast, ToastContainer} from "react-toastify";
+
+
+const HarshEventSummaryReport = (props) => {
+    const [startDateRange, setStartDateRange] = useState(moment().startOf('day').format('YYYY-MM-DDTHH:mm'));
+    const [endDateRange, setEndDateRange] = useState(moment().format('YYYY-MM-DDTHH:mm'));
+    const [reportType, setReportType] = useState();
+    const [device, setDevice] = useState();
+    const [deviceList, setDeviceList] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isDownloading, setDownloading] = useState(false);
+
+    let currentUser = getCurrentUser();
+    React.useEffect(() => {
+        fetchDrivers();
+     }, []);
+
+     const fetchDrivers = () => {
+        setIsLoading(true);
+        axios.get(
+          `${serverUrl}/devices?user_hash=${currentUser ? currentUser.user_api_hash : ''}`
+        )
+          .then((res) => {
+            return res.data;
+          })
+          .then((data) => {
+            setIsLoading(false);
+            setDeviceList(data.map((row) => (
+              {
+                ...row, label: (row.driverName || '') + " ["+row.name+"]", value: row.id
+              }
+            )));
+          });
+      }
+
+      const generateReport = () => {
+          
+          if(!reportType){
+            toast.error('Enter report type');
+          }
+        
+          const parameters = {
+              startDateTime: startDateRange,
+              endDateTime: endDateRange,
+              device: device
+          };
+          const data = {
+              reportName: "harsh_event",
+              reportFormat: reportType,
+              parameters: parameters
+          };
+
+          let reportFormat = 'application/'+(data.reportFormat).toLowerCase();
+    if(reportFormat === 'application/excel'){
+        reportFormat = 'application/vnd.ms-excel';
+    }
+    if(reportFormat === 'application/csv'){
+        reportFormat = 'text/csv';
+    }
+    setDownloading(true);
+    axios
+        .post(`${serverUrl}/api/generate-report`, data, {responseType: 'arraybuffer'})
+        .then(response => {
+            setDownloading(false);
+        //Create a Blob from the PDF Stream
+            const file = new Blob(
+                [response.data],
+                {type: reportFormat});
+            //Build a URL from the file
+            const fileURL = URL.createObjectURL(file);
+        //Open the URL on new Window
+            window.open(fileURL);
+        })
+        .catch(error => {
+            setDownloading(false);
+            console.log(error);
+        });
+      }
+
+    return (
+        <Modal isOpen={props.showModal} toggle={props.toggleModal} size="lg">
+        <ModalHeader toggle={props.toggleModal}>
+            Download Harsh Event Summary Report
+      </ModalHeader>
+
+        <ModalBody>
+            <ToastContainer />
+            <Row>
+            <Col md={6}>
+                    <FormGroup>
+                        <Label>
+                            From*
+      </Label>
+      <Input
+          type="datetime-local"
+          name="keyword"
+          id="search"
+          placeholder=" From"
+          className="mr-1"
+          value={startDateRange}
+        onChange={(e) => setStartDateRange(e.target.value)}
+        />
+                    </FormGroup>
+                </Col>
+                <Col md={6}>
+                    <FormGroup>
+                        <Label>
+                            To*
+      </Label>
+      <Input
+          type="datetime-local"
+          name="keyword"
+          id="search"
+          placeholder=" To"
+          className="mr-1"
+          value={endDateRange}
+        onChange={(e) => setEndDateRange(e.target.value)}
+        />
+                    </FormGroup>
+                </Col>
+                <Col md={6}>
+                    <FormGroup>
+                        <Label>
+                            Format*
+      </Label>
+                        <Select
+                            className="react-select"
+                            classNamePrefix="react-select"
+                            name="customer"
+                            onChange={x => setReportType(x.value)}
+                            options={[{ label: "PDF", value: "pdf" }, { label: "Excel", value: "excel" }]}
+                            required
+                        />
+                    </FormGroup>
+                </Col>
+                
+                <Col md={6}>
+                    <FormGroup>
+                        <Label>
+                           Select Device
+      </Label>
+      <Select
+                            className="react-select"
+                            classNamePrefix="react-select"
+                            name="device"
+                            isMulti
+                            options={deviceList}
+                            required
+                        />
+                    </FormGroup>
+                </Col>
+            </Row>
+              </ModalBody>
+        <ModalFooter>
+            <Button onClick={generateReport}>{isDownloading ? "Downloading Report ..." : "Generate"}</Button>
+        </ModalFooter>
+    </Modal>
+
+    )
+}
+
+export default HarshEventSummaryReport;

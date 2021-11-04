@@ -116,35 +116,35 @@ export const barChartData = {
 };
 
 export const barChartData2 = {
-  labels: [''],
+  labels: ["Driver's Proficiency"],
   datasets: [
     {
       label: 'Me',
-      borderColor: colors.themeColor1,
-      backgroundColor: colors.themeColor1_10,
+     // borderColor: colors.themeColor1,
+      //backgroundColor: colors.themeColor1_10,
       data: [50],
-      borderWidth: 2,
+      //borderWidth: 2,
     },
     {
       label: 'Fleet Best',
-      borderColor: colors.themeColor2,
-      backgroundColor: colors.themeColor2_10,
+      //borderColor: colors.themeColor2,
+      //backgroundColor: colors.themeColor2_10,
       data: [60],
-      borderWidth: 2,
+      //borderWidth: 2,
     },
     {
       label: 'Fleet Avg.',
-      borderColor: colors.themeColor3,
-      backgroundColor: colors.themeColor3_10,
+      //borderColor: colors.themeColor3,
+      //backgroundColor: colors.themeColor3_10,
       data: [50],
-      borderWidth: 2,
+     // borderWidth: 2,
     },
     {
       label: 'Goal',
-      borderColor: colors.themeColor4,
-      backgroundColor: colors.themeColor4_10,
+      //borderColor: colors.themeColor4,
+      //backgroundColor: colors.themeColor4_10,
       data: [90],
-      borderWidth: 2,
+      //borderWidth: 2,
     },
   ],
 };

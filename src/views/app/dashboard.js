@@ -112,29 +112,29 @@ const Dashboard = ({ match }) => {
         </Colxx>
       </Row> */}
       <Row>
-        <Colxx xxs="3" className="mb-4">
-        <Card color="secondary">
+        <Colxx xxs="6" className="mb-4">
+        <Card color="primary">
         <CardBody className="text-center">
           <i className={"simple-icon-chart"} />
           <p className="card-text font-weight-semibold mb-0">
             <IntlMessages id={"Total Assets"} />
           </p>
-          <p className="lead text-center">450</p>
+          <p className="lead text-center">8</p>
         </CardBody>
       </Card>
         </Colxx>
-        <Colxx xxs="3" className="mb-4">
-        <Card color="secondary">
+        <Colxx xxs="6" className="mb-4">
+        <Card color="primary">
         <CardBody className="text-center">
           <i className={"simple-icon-chart"} />
           <p className="card-text font-weight-semibold mb-0">
             <IntlMessages id={"Total Distance"} />
           </p>
-          <p className="lead text-center">6,000 km</p>
+          <p className="lead text-center">6,290 km</p>
         </CardBody>
       </Card>
           </Colxx>
-          <Colxx xxs="3" className="mb-4">
+          {/* <Colxx xxs="3" className="mb-4">
           <Card  color="secondary">
         <CardBody className="text-center">
           <i className={"simple-icon-chart"} />
@@ -155,9 +155,9 @@ const Dashboard = ({ match }) => {
           <p className="lead text-center">0</p>
         </CardBody>
       </Card>
-          </Colxx>
+          </Colxx> */}
       </Row>
-      <Row>
+      {/* <Row>
       <Colxx xxs="3" className="mb-4">
         <Card className={'dashboard-small-chart' }>
           <CardBody>
@@ -187,6 +187,7 @@ const Dashboard = ({ match }) => {
         </Card>
       </Colxx>
       </Row>
+      */}
       <DriverPerformanceStats />
     </>
   );

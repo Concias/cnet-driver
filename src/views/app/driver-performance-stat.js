@@ -14,6 +14,8 @@ import axios from 'axios';
 import moment from "moment";
 import { serverUrl } from '../../constants/defaultValues';
 import { getCurrentUser } from '../../helpers/Utils';
+import ScoreSummaryReport from './report-modal/score-summary-report';
+import HarshEventSummaryReport from './report-modal/harsh-event-summary-report';
 
 function Table({ columns, data }) {
     const {
@@ -104,34 +106,9 @@ function Table({ columns, data }) {
 const DriverPerformanceStats = () => {
     const [showModal, setShowModal] = useState(false);
     const toggleModal = () => setShowModal(!showModal);
-    const [startDateRange, setStartDateRange] = useState(moment().format('YYYY-MM-DD'));
-    const [endDateRange, setEndDateRange] = useState(moment().format('YYYY-MM-DD'));
-    const [deviceList, setDeviceList] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-    let currentUser = getCurrentUser();
-    React.useEffect(() => {
-        fetchDrivers();
-     }, []);
-    const fetchDrivers = () => {
-        setIsLoading(true);
-        axios.get(
-          `${serverUrl}/devices?user_hash=${currentUser ? currentUser.user_api_hash : ''}`
-        )
-          .then((res) => {
-            return res.data;
-          })
-          .then((data) => {
-            setIsLoading(false);
-            // const items = data.map((x) => x.items);
-            // var merged = [].concat.apply([], items);
-            setDeviceList(data.map((row) => (
-              {
-                ...row, label: (row.driverName || '') + " ["+row.name+"]", value: row.id
-              }
-            )));
-          });
-      }
-     
+    const [showHarshModal, setShowHarshModal] = useState(false);
+    const toggleHarshModal = () => setShowHarshModal(!showHarshModal);
+ 
     const cols = React.useMemo(
         () => [
             {
@@ -154,7 +131,7 @@ const DriverPerformanceStats = () => {
 
     return (
         <Row>
-            <Colxx md={4}>
+            {/* <Colxx md={4}>
                 <Card className="h-100">
                     <CardBody>
                         <CardTitle>
@@ -174,8 +151,9 @@ const DriverPerformanceStats = () => {
                     </CardBody>
                 </Card>
             </Colxx>
-            <Colxx md={4}>
-                <Card className="h-100" color="warning">
+             */}
+            <Colxx md={12}>
+                <Card className="h-100" color="secondary">
                     <CardBody>
                         <CardTitle>
                             Reports
@@ -185,97 +163,28 @@ const DriverPerformanceStats = () => {
                             <div key={"scsr"} className="d-flex flex-row mb-3 pb-3 border-bottom">
                                 <h6 style={{ cursor: "pointer" }} onClick={toggleModal}><i className={"simple-icon-arrow-right-circle"} /> {"   "} Score Card Summary Report</h6>
                             </div>
-                            <div key={"scsr"} className="d-flex flex-row mb-3 pb-3 border-bottom">
+                            <div key={"scsr9"} className="d-flex flex-row mb-3 pb-3 border-bottom">
+                                <h6 style={{ cursor: "pointer" }} onClick={toggleHarshModal}><i className={"simple-icon-arrow-right-circle"} /> {"   "} Harsh Event Summary Report</h6>
+                            </div>
+                            
+                            {/* <div key={"scsr1"} className="d-flex flex-row mb-3 pb-3 border-bottom">
                                 <h6 style={{ cursor: "pointer" }} onClick={toggleModal}><i className={"simple-icon-arrow-right-circle"} /> {"   "}Individual Driver Summary Report</h6>
                             </div>
-                            <li key={"scsr"} className="d-flex flex-row mb-3 pb-3 border-bottom">
+                            <li key={"scsr2"} className="d-flex flex-row mb-3 pb-3 border-bottom">
                                 <h6 style={{ cursor: "pointer" }} onClick={toggleModal}><i className={"simple-icon-arrow-right-circle"} />{"   "}Co2 Summary Report</h6>
                             </li>
-                            <li key={"scsr"} className="d-flex flex-row mb-3 pb-3 border-bottom">
+                            <li key={"scsr3"} className="d-flex flex-row mb-3 pb-3 border-bottom">
                                 <h6 style={{ cursor: "pointer" }} onClick={toggleModal}><i className={"simple-icon-arrow-right-circle"} />{"   "} Fuel Consumption Report</h6>
-                            </li>
+                            </li> */}
                             {/* </ul> */}
                         </div>
                     </CardBody>
                 </Card>
             </Colxx>
 
-            <Modal isOpen={showModal} toggle={toggleModal} size="lg">
-                <ModalHeader>
-                    Download Report
-              </ModalHeader>
-                <ModalBody>
-                    <Row>
-                    <Col md={6}>
-                            <FormGroup>
-                                <Label>
-                                    From*
-              </Label>
-              <Input
-                  type="date"
-                  name="keyword"
-                  id="search"
-                  placeholder=" From"
-                  className="mr-1"
-                  value={startDateRange}
-                onChange={(e) => setStartDateRange(e.target.value)}
-                />
-                            </FormGroup>
-                        </Col>
-                        <Col md={6}>
-                            <FormGroup>
-                                <Label>
-                                    To*
-              </Label>
-              <Input
-                  type="date"
-                  name="keyword"
-                  id="search"
-                  placeholder=" To"
-                  className="mr-1"
-                  value={endDateRange}
-                onChange={(e) => setEndDateRange(e.target.value)}
-                />
-                            </FormGroup>
-                        </Col>
-                        <Col md={6}>
-                            <FormGroup>
-                                <Label>
-                                    Format*
-              </Label>
-                                <Select
-                                    className="react-select"
-                                    classNamePrefix="react-select"
-                                    name="customer"
-
-                                    options={[{ label: "PDF", value: "pdf" }, { label: "Excel", value: "excel" }]}
-                                    required
-                                />
-                            </FormGroup>
-                        </Col>
-                        
-                        <Col md={6}>
-                            <FormGroup>
-                                <Label>
-                                   Select Device*
-              </Label>
-              <Select
-                                    className="react-select"
-                                    classNamePrefix="react-select"
-                                    name="customer"
-                                    
-                                    options={deviceList}
-                                    required
-                                />
-                            </FormGroup>
-                        </Col>
-                    </Row>
-                      </ModalBody>
-                <ModalFooter>
-                    <Button>Generate</Button>
-                </ModalFooter>
-            </Modal>
-        </Row>
+<ScoreSummaryReport showModal={showModal} toggleModal={toggleModal} />
+<HarshEventSummaryReport showModal={showHarshModal} toggleModal={toggleHarshModal} />
+             </Row>
     );
 };
 
