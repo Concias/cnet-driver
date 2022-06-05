@@ -6,9 +6,8 @@ import Breadcrumb from '../../containers/navs/Breadcrumb';
 import { getCurrentUser } from '../../helpers/Utils';
 import { serverUrl } from '../../constants/defaultValues';
 import RadialProgressCard from '../../components/cards/RadialProgressCard';
-import { LineChart, BarChart } from '../../components/charts';
+import {  BarChart } from '../../components/charts';
 import moment from "moment";
-import { lineChartData, barChartData2 } from '../../data/charts';
 import axios from 'axios';
 
 const DevicePage = (props) => {
@@ -20,10 +19,11 @@ const DevicePage = (props) => {
   const [endDateRange, setEndDateRange] = useState(moment().format('YYYY-MM-DD'));
   const [deviceData, setDeviceData] = useState({ totalActive: 0, distance: 0, time: "00:00:00",scoreHistory:[], driverProficiency: [] });
   const [fetching, setFetching] = useState(true);
+  const [downloading, setDownloading] = useState(false);
   const [isFirstLoad, setFirstLoad] = useState(true);
   let currentUser = getCurrentUser();
   useEffect(() => {
-    fetchDeviceHistory();
+   // fetchDeviceHistory();
   }, []);
 
   const [metricsStatus, setMs] = useState([{ title: "Speeding Events Count", status: 0, total: 100 },
@@ -43,11 +43,10 @@ const DevicePage = (props) => {
       .then((data) => {
         setFirstLoad(false);
         setDeviceData(data);
-        setMs([{ title: "Speeding Events Count", status: 100 - data.speedingCount, total: 100 },
-        // {title:"Speeding Time",status: 34,total: 100 },
-        { title: "Harsh Braking Events Count", status: 100 - data.harshBrakingCount, total: 100 },
-        { title: "Harsh Acceleration Events Count", status: 100 - data.harshAccelerationCount, total: 100 },
-        { title: "Harsh Cornering Events Count", status: 100 - data.harshCorneringCount, total: 100 }])
+        setMs([{ title: "Speeding Events Count", status: data.speedingCount, total: 100 },
+        { title: "Harsh Braking Events Count", status: data.harshBrakingCount, total: 100 },
+        { title: "Harsh Acceleration Events Count", status: data.harshAccelerationCount, total: 100 },
+        { title: "Harsh Cornering Events Count", status: data.harshCorneringCount, total: 100 }])
         setFetching(false);
       });
 
@@ -56,6 +55,46 @@ const DevicePage = (props) => {
   const performSearch = () => {
     fetchDeviceHistory();
   }
+
+  const generateReport = () => {
+    if(downloading){
+        return;
+    }
+  
+    const parameters = {
+        startDate: startDateRange,
+        endDate: endDateRange,
+        device_score: deviceData.score || 0,
+        average_score: deviceData.avgScore || 0,
+        max_score: deviceData.bestScore || 0,
+        deviceId: deviceId
+    };
+    const data = {
+        reportName: "gps_driver_template",
+        reportFormat: 'pdf',
+        parameters: parameters
+    };
+
+    let reportFormat = 'application/pdf';
+setDownloading(true);
+axios
+  .post(`${serverUrl}/api/generate-report`, data, {responseType: 'arraybuffer'})
+  .then(response => {
+      setDownloading(false);
+  //Create a Blob from the PDF Stream
+      const file = new Blob(
+          [response.data],
+          {type: reportFormat});
+      //Build a URL from the file
+      const fileURL = URL.createObjectURL(file);
+  //Open the URL on new Window
+      window.open(fileURL);
+  })
+  .catch(error => {
+      setDownloading(false);
+      console.log(error);
+  });
+}
 
   return (
     <>
@@ -109,9 +148,10 @@ const DevicePage = (props) => {
               <i className="iconsminds-magnifi-glass"></i> {' '}   Search
             </Button> {' '}
             {!isFirstLoad && 
-            <Button color="info" className="mr-1" onClick={() => performSearch()}
+            <Button color="info" className="mr-1" onClick={() => generateReport()}
               size="xs">
-              <i className="simple-icon-printer"></i> {' '}   Download Driver Performance
+              <i className="simple-icon-printer"></i> {' '}   
+              {downloading ? 'Downloading...' : 'Download Driver Performance'}
             </Button>
             }
           </div>
@@ -214,7 +254,7 @@ const DevicePage = (props) => {
                 3. Score Trend Over the Last 4 Weeks
               </CardTitle>
               <div className="dashboard-line-chart">
-                <LineChart shadow data={deviceData.scoreHistory} />
+                <BarChart shadow data={deviceData.scoreHistory} />
               </div>
             </CardBody>
           </Card>

@@ -13,7 +13,7 @@ const HarshEventSummaryReport = (props) => {
     const [startDateRange, setStartDateRange] = useState(moment().startOf('day').format('YYYY-MM-DDTHH:mm'));
     const [endDateRange, setEndDateRange] = useState(moment().format('YYYY-MM-DDTHH:mm'));
     const [reportType, setReportType] = useState();
-    const [device, setDevice] = useState();
+    const [device, setDevice] = useState([]);
     const [deviceList, setDeviceList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isDownloading, setDownloading] = useState(false);
@@ -42,18 +42,19 @@ const HarshEventSummaryReport = (props) => {
       }
 
       const generateReport = () => {
-          
+          //console.log(device);
           if(!reportType){
             toast.error('Enter report type');
+            return;
           }
         
           const parameters = {
               startDateTime: startDateRange,
               endDateTime: endDateRange,
-              device: device
+              deviceIds: device+""
           };
           const data = {
-              reportName: "harsh_event",
+              reportName: "harsh_event_summary_report",
               reportFormat: reportType,
               parameters: parameters
           };
@@ -152,6 +153,7 @@ const HarshEventSummaryReport = (props) => {
                             classNamePrefix="react-select"
                             name="device"
                             isMulti
+                            onChange={x => setDevice(x.map(i=>i.id).toString())}
                             options={deviceList}
                             required
                         />

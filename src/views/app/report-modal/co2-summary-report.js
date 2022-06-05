@@ -9,7 +9,7 @@ import { getCurrentUser } from '../../../helpers/Utils';
 import {toast, ToastContainer} from "react-toastify";
 
 
-const ScoreSummaryReport = (props) => {
+const Co2SummaryReport = (props) => {
     const [startDateRange, setStartDateRange] = useState(moment().startOf('week').format('YYYY-MM-DD'));
     const [endDateRange, setEndDateRange] = useState(moment().format('YYYY-MM-DD'));
     const [reportType, setReportType] = useState();
@@ -54,7 +54,7 @@ const ScoreSummaryReport = (props) => {
               deviceIds: device
           };
           const data = {
-              reportName: "score_card_summary_report",
+              reportName: "co2_summary_report",
               reportFormat: reportType,
               parameters: parameters
           };
@@ -91,7 +91,7 @@ const ScoreSummaryReport = (props) => {
     return (
         <Modal isOpen={props.showModal} toggle={props.toggleModal} size="lg">
         <ModalHeader toggle={props.toggleModal}>
-            Download Scorecard Summary Report By Driver
+            Download Co2 Emission Report By Driver
       </ModalHeader>
 
         <ModalBody>
@@ -171,4 +171,4 @@ const ScoreSummaryReport = (props) => {
     )
 }
 
-export default ScoreSummaryReport;
+export default Co2SummaryReport;

@@ -1,11 +1,11 @@
 import React, { forwardRef, useState, useEffect } from 'react';
-import { Card, CardBody, Row,Col, Label, FormGroup, Input, Button, CardTitle } from 'reactstrap';
+import { Card, CardBody, Row,Col, Label, FormGroup, Modal, ModalBody, ModalHeader, ModalFooter, Button, CardTitle } from 'reactstrap';
 import { Colxx, Separator } from '../../components/common/CustomBootstrap';
 import Breadcrumb from '../../containers/navs/Breadcrumb';
 import { serverUrl } from '../../constants/defaultValues';
 import MaterialTable from "material-table";
 import axios from 'axios';
-
+import {toast, ToastContainer} from "react-toastify";
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
 import Check from '@material-ui/icons/Check';
@@ -22,7 +22,7 @@ import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 import Select from 'react-select';
-
+import ReactTagInput from "@pathofdev/react-tag-input";
 import { getCurrentUser } from '../../helpers/Utils';
 import CardFooter from 'reactstrap/lib/CardFooter';
 
@@ -49,12 +49,74 @@ const tableIcons = {
 const ReportSchedule = (props) => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [formData, setFormData] = useState({emails:"", scheduleType:"", reportName:"", creator:"admin"})
+  const [tags, setTags] = React.useState([])
+  const [editTags, setEditTags] = React.useState([])
+
+  const [currentData, setCurrentData] = useState();
+  const [showEditModal, setShowEditModal] = useState(false);
+  const toggleEditModal = () => setShowEditModal(!showEditModal);
 
   let currentUser = getCurrentUser();
   useEffect(() => {
     fetchSchedules();
   }, []);
 
+  const openEditModal = (row) => {
+    setCurrentData(row);
+    setEditTags(row.emails.split(','));
+    toggleEditModal();
+  }
+
+  const openDeleteModal = (row) => {
+    if(window.confirm('Are you sure you want to delete?') == true){
+      axios.delete(
+        `${serverUrl}/api/report-schedules/${row.id}`
+      ).then((data) => {
+          fetchSchedules();
+          toast.success('Report schedule deleted successfully');
+        }).catch(error => {
+          if(error.response.status === 409){
+           // console.log(error.response.data);
+            toast.error(error.response.data);
+            return;
+          }
+         
+          toast.error('An errror occured, could not delete report schedule');
+        });
+    }
+  }
+
+  const editSchedule = () => {
+    if(isEditing){
+      return;
+    }
+    if(!currentData.emails){
+      toast.error('Enter email');
+      return;
+    }
+    setIsEditing(true);
+    axios.put(
+      `${serverUrl}/api/report-schedules/${currentData.id}`, {emails: currentData.emails}
+    ).then((data) => {
+      setIsEditing(false);
+        fetchSchedules();
+        toast.success('Report schedule edited successfully');
+        toggleEditModal();
+      }).catch(error => {
+        setIsEditing(false);
+        if(error.response.status === 409){
+         // console.log(error.response.data);
+          toast.error(error.response.data);
+          return;
+        }
+       
+        toast.error('An errror occured, could not save report schedule');
+      });
+
+  }
   const fetchSchedules = () => {
     setIsLoading(true);
     axios.get(
@@ -70,8 +132,38 @@ const ReportSchedule = (props) => {
         setData(data);
       });
   }
+
+  const createReportSchedule = () => {
+    
+    if(saving){
+      return;
+    }
+    if(!formData.emails || !formData.reportName || !formData.scheduleType){
+      toast.error('Enter report type');
+      return;
+    }
+    formData["creator"] = currentUser.username;
+    setSaving(true);
+    axios.post(
+      `${serverUrl}/api/schedule-report`, formData
+    ).then((data) => {
+        setSaving(false);
+        fetchSchedules();
+        toast.success('Report schedule created successfully');
+      }).catch(error => {
+        setSaving(false);
+        if(error.response.status === 409){
+         // console.log(error.response.data);
+          toast.error(error.response.data);
+          return;
+        }
+       
+        toast.error('An errror occured, could not save report schedule');
+      });
+  }
   return (
     <>
+    <ToastContainer />
       <Row>
         <Colxx xxs="12">
           <Breadcrumb heading="menu.report-schedule-search" match={props.match} />
@@ -80,7 +172,7 @@ const ReportSchedule = (props) => {
       </Row>
       <Row className="mb-5">
       <Colxx xxs="12" >
-        <Card>
+        <Card border="success">
          
           <CardBody>
           <CardTitle>Create a New Report Schedule</CardTitle>
@@ -94,10 +186,11 @@ const ReportSchedule = (props) => {
                                     className="react-select"
                                     classNamePrefix="react-select"
                                     name="report"
+                                    onChange={(x) => setFormData({...formData, reportName: x.value})}
                                     options={[{ label: "Co2 Summary Report", value: "CO2_SUMMARY_REPORT" }, 
-                                    { label: "Fuel Consumption Report", value: "FUEL_CONSUMPTION_REPORT" },
-                                    { label: "Individual Driver Summary Report", value: "INDIVIDUAL_DRIVER_SUMMARY_REPORT" },
-                                    { label: "Score Card Summary Report", value: "SCORE_CARE_SUMMARY_REPORT" }]}
+                                 //   { label: "Fuel Consumption Report", value: "FUEL_CONSUMPTION_REPORT" },
+                                    { label: "Harsh Event Summary Report", value: "HARSH_EVENT_SUMMARY_REPORT" },
+                                    { label: "Score Card Summary Report", value: "SCORE_CARD_SUMMARY_REPORT" }]}
                                     required
                                 />
 
@@ -112,6 +205,7 @@ const ReportSchedule = (props) => {
                                     className="react-select"
                                     classNamePrefix="react-select"
                                     name="report"
+                                    onChange={(x) => setFormData({...formData, scheduleType: x.value})}
                                     options={[{ label: "Daily", value: "DAILY" }, 
                                     { label: "Weekly", value: "WEEKLY" },
                                     { label: "Monthly", value: "MONTHLY" }]}
@@ -120,27 +214,37 @@ const ReportSchedule = (props) => {
 
               </FormGroup>
               </Col>
-                        <Col md={12}>
-                            <FormGroup>
+              <Col>
+              <FormGroup>
                                 <Label>
                                     Emails*
               </Label>
-                                <Input
-                                    type="text"
-                                    name="emails"
-                                    id="emails"
-                                    placeholder=" "
-                                    multiple
-                                    required
-                                />
-                            </FormGroup>
-                        </Col>
+              <ReactTagInput 
+      tags={tags} 
+      placeholder="Type and press enter"
+      onChange={(newTags) => {
+        setFormData({...formData, emails: newTags.toString()});
+        setTags(newTags);
+      }
+      }
+      validator={(value) => {
+        // Don't actually validate e-mails this way
+        const isEmail = value.indexOf("@") !== -1;
+        if (!isEmail) {
+          toast.info("Please enter an e-mail address");
+        }
+        // Return boolean to indicate validity
+        return isEmail;
+      }}
+    />
+    </FormGroup>
+              </Col>
                                       
             </Row>
           </CardBody>
           <CardFooter>
-            <Button>
-              Create Report Schedule
+            <Button onClick={createReportSchedule}>
+             {saving ? 'Processing...': 'Create Report Schedule'}
             </Button>
           </CardFooter>
         </Card>
@@ -157,14 +261,29 @@ const ReportSchedule = (props) => {
             icons={tableIcons}
             title="Report Schedule List"
             columns={[
-              { title: "Report Name", field: "reportName", filtering: true },
+              { title: "Report Name", field: "reportName", filtering: true,render: rowData => <span>{rowData.reportName.replace(new RegExp('_', 'g'), ' ')} </span> },
               { title: "Schedule Type", field: "scheduleType" },
-              { title: "Emails", field: "email" },
-              { title: "Date Created", field: "dateCreated" },
+              { title: "Emails", field: "emails" },
+              { title: "Date Created", field: "dateCreated", type:"datetime"},
+              { title: "Actions", field: "actions" },
             ]}
 
             data={data}
             isLoading={isLoading}
+            actions= {[
+              {
+                  icon: Edit,
+                  iconProps: {color: 'primary'},
+                  tooltip: 'Edit Emails',
+                  onClick: (event, rowData) => openEditModal(rowData)
+              },
+              {
+                  icon: DeleteOutline,
+                  iconProps: {color: 'primary'},
+                  tooltip: 'Delete Schedule',
+                  onClick: (event, rowData) => openDeleteModal(rowData)
+              }
+                  ]}
             options={{
               headerStyle: {
                 backgroundColor: "#9F9FA5",
@@ -182,6 +301,46 @@ const ReportSchedule = (props) => {
           />
         </Colxx>
       </Row>
+
+      <Modal isOpen={showEditModal} toggle={toggleEditModal} size="lg">
+        <ModalHeader toggle={toggleEditModal}>
+            Edit Mail Recipients
+      </ModalHeader>
+
+        <ModalBody>
+            <Row>
+            <Col>
+              <FormGroup>
+                                <Label>
+                                    Emails*
+              </Label>
+              <ReactTagInput 
+      tags={editTags} 
+      placeholder="Type and press enter"
+      onChange={(newTags) => {
+        setCurrentData({...currentData, emails: newTags.toString()});
+        setEditTags(newTags);
+      }
+      }
+      validator={(value) => {
+        // Don't actually validate e-mails this way
+        const isEmail = value.indexOf("@") !== -1;
+        if (!isEmail) {
+          toast.info("Please enter an e-mail address");
+        }
+        // Return boolean to indicate validity
+        return isEmail;
+      }}
+    />
+    </FormGroup>
+              </Col>
+                   
+            </Row>
+          </ModalBody>
+          <ModalFooter>
+          <Button onClick={editSchedule}>{isEditing ? "Processing ..." : "Save"}</Button>
+          </ModalFooter>
+          </Modal>
     </>
   );
 };

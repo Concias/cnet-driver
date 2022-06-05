@@ -13,6 +13,8 @@ import {
 } from './constants/defaultValues';
 import { getCurrentColor, setCurrentColor } from './helpers/Utils';
 import 'react-toastify/dist/ReactToastify.css';
+import "@pathofdev/react-tag-input/build/index.css";
+
 
 const color = (isMultiColorActive || isDarkSwitchActive) ? getCurrentColor() : defaultColor;
 setCurrentColor(color);

@@ -43,7 +43,7 @@ function* loginWithEmailPassword({ payload }) {
     console.log(loginUser);
     console.log(error);
     if (loginUser && loginUser.status === 200) {
-      setCurrentUser(loginUser.data);
+      setCurrentUser({...loginUser.data, username: email});
       setAuthToken(loginUser.data.user_api_hash);
       yield put(loginUserSuccess(loginUser.data));
       

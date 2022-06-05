@@ -16,6 +16,7 @@ import { serverUrl } from '../../constants/defaultValues';
 import { getCurrentUser } from '../../helpers/Utils';
 import ScoreSummaryReport from './report-modal/score-summary-report';
 import HarshEventSummaryReport from './report-modal/harsh-event-summary-report';
+import Co2SummaryReport from './report-modal/co2-summary-report';
 
 function Table({ columns, data }) {
     const {
@@ -108,6 +109,8 @@ const DriverPerformanceStats = () => {
     const toggleModal = () => setShowModal(!showModal);
     const [showHarshModal, setShowHarshModal] = useState(false);
     const toggleHarshModal = () => setShowHarshModal(!showHarshModal);
+    const [showCo2Modal, setShowCo2Modal] = useState(false);
+    const toggleCo2Modal = () => setShowCo2Modal(!showCo2Modal);
  
     const cols = React.useMemo(
         () => [
@@ -166,7 +169,9 @@ const DriverPerformanceStats = () => {
                             <div key={"scsr9"} className="d-flex flex-row mb-3 pb-3 border-bottom">
                                 <h6 style={{ cursor: "pointer" }} onClick={toggleHarshModal}><i className={"simple-icon-arrow-right-circle"} /> {"   "} Harsh Event Summary Report</h6>
                             </div>
-                            
+                            <div key={"scsr3"} className="d-flex flex-row mb-3 pb-3 border-bottom">
+                                <h6 style={{ cursor: "pointer" }} onClick={toggleCo2Modal}><i className={"simple-icon-arrow-right-circle"} /> {"   "} Co2 Emission Report</h6>
+                            </div>
                             {/* <div key={"scsr1"} className="d-flex flex-row mb-3 pb-3 border-bottom">
                                 <h6 style={{ cursor: "pointer" }} onClick={toggleModal}><i className={"simple-icon-arrow-right-circle"} /> {"   "}Individual Driver Summary Report</h6>
                             </div>
@@ -184,6 +189,7 @@ const DriverPerformanceStats = () => {
 
 <ScoreSummaryReport showModal={showModal} toggleModal={toggleModal} />
 <HarshEventSummaryReport showModal={showHarshModal} toggleModal={toggleHarshModal} />
+<Co2SummaryReport showModal={showCo2Modal} toggleModal={toggleCo2Modal} />
              </Row>
     );
 };

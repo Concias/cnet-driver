@@ -3,11 +3,29 @@ import { Row, Card, CardBody } from 'reactstrap';
 import IntlMessages from '../../helpers/IntlMessages';
 import { Colxx, Separator } from '../../components/common/CustomBootstrap';
 import Breadcrumb from '../../containers/navs/Breadcrumb';
-import { SmallLineChart } from '../../components/charts';
+import { serverUrl } from '../../constants/defaultValues';
+import axios from 'axios';
 import { colors } from '../../constants/defaultValues';
 import DriverPerformanceStats from './driver-performance-stat';
 
 const Dashboard = ({ match }) => {
+
+  const [stats,setStats] = React.useState({totalAssets: 0, totalDistance: 0});
+
+  React.useEffect(() => {
+    fetchDashboardStats();
+ }, []);
+  const fetchDashboardStats = () => {
+    axios.get(
+      `${serverUrl}/dashboard`
+    )
+      .then((res) => {
+        return res.data;
+      })
+      .then((data) => {
+        setStats(data);
+      });
+  }
   const harshBrack = {
     labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
     datasets: [
@@ -119,7 +137,7 @@ const Dashboard = ({ match }) => {
           <p className="card-text font-weight-semibold mb-0">
             <IntlMessages id={"Total Assets"} />
           </p>
-          <p className="lead text-center">8</p>
+          <p className="lead text-center">{stats.totalAssets || 0}</p>
         </CardBody>
       </Card>
         </Colxx>
@@ -128,9 +146,9 @@ const Dashboard = ({ match }) => {
         <CardBody className="text-center">
           <i className={"simple-icon-chart"} />
           <p className="card-text font-weight-semibold mb-0">
-            <IntlMessages id={"Total Distance"} />
+            <IntlMessages id={"Total Distance This Week"} />
           </p>
-          <p className="lead text-center">6,290 km</p>
+          <p className="lead text-center">{stats.totalDistance || 0.0} km</p>
         </CardBody>
       </Card>
           </Colxx>
