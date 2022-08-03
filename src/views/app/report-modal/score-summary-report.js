@@ -14,7 +14,10 @@ const ScoreSummaryReport = (props) => {
     const [endDateRange, setEndDateRange] = useState(moment().format('YYYY-MM-DD'));
     const [reportType, setReportType] = useState();
     const [device, setDevice] = useState();
+    const [deviceGroup, setDeviceGroup] = useState("");
     const [deviceList, setDeviceList] = useState([]);
+    const [filteredDeviceList, setFilteredDeviceList] = useState([]);
+    const [deviceGroupList, setDeviceGroupList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isDownloading, setDownloading] = useState(false);
 
@@ -22,7 +25,13 @@ const ScoreSummaryReport = (props) => {
     React.useEffect(() => {
         fetchDrivers();
      }, []);
-
+     React.useEffect(() => {
+        if(!deviceGroup || deviceGroup === ""){
+            return;
+        }
+        let deviceGroupIdArray = deviceGroup.split(',');
+       setFilteredDeviceList(deviceList.filter(x => deviceGroupIdArray.includes(x.deviceGroup.id+"")))
+     }, [deviceGroup]);
      const fetchDrivers = () => {
         setIsLoading(true);
         axios.get(
@@ -33,11 +42,15 @@ const ScoreSummaryReport = (props) => {
           })
           .then((data) => {
             setIsLoading(false);
-            setDeviceList(data.map((row) => (
-              {
-                ...row, label: (row.driverName || '') + " ["+row.name+"]", value: row.id
-              }
-            )));
+            let deviceGroups = [...new Map(data.map(item => [item.deviceGroup.id, {label:item.deviceGroup.name, value: item.deviceGroup.id}])).values()]
+            setDeviceGroupList(deviceGroups);
+            let devices = data.map((row) => (
+                {
+                  ...row, label: (row.driverName || '') + " ["+row.name+"]", value: row.id
+                }
+              ));
+            setDeviceList(devices);
+            setFilteredDeviceList(devices);
           });
       }
 
@@ -51,7 +64,8 @@ const ScoreSummaryReport = (props) => {
           const parameters = {
               startDate: startDateRange,
               endDate: endDateRange,
-              deviceIds: device
+              deviceIds: device,
+              deviceGroupIds: deviceGroup
           };
           const data = {
               reportName: "score_card_summary_report",
@@ -144,7 +158,22 @@ const ScoreSummaryReport = (props) => {
                         />
                     </FormGroup>
                 </Col>
-                
+                <Col md={6}>
+                    <FormGroup>
+                        <Label>
+                           Select Device Group
+      </Label>
+      <Select
+                            className="react-select"
+                            classNamePrefix="react-select"
+                            name="device"
+                            isMulti
+                            onChange={x => setDeviceGroup(x.map(i=>i.value).toString())}
+                            options={deviceGroupList}
+                            required
+                        />
+                    </FormGroup>
+                </Col>
                 <Col md={6}>
                     <FormGroup>
                         <Label>
@@ -156,7 +185,7 @@ const ScoreSummaryReport = (props) => {
                             name="device"
                             isMulti
                             onChange={x => setDevice(x.map(i=>i.id).toString())}
-                            options={deviceList}
+                            options={filteredDeviceList}
                             required
                         />
                     </FormGroup>

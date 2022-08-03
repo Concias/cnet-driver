@@ -138,8 +138,16 @@ const ReportSchedule = (props) => {
     if(saving){
       return;
     }
-    if(!formData.emails || !formData.reportName || !formData.scheduleType){
+    if(!formData.emails ){
+      toast.error('Enter report email');
+      return;
+    }
+    if(!formData.reportName){
       toast.error('Enter report type');
+      return;
+    }
+    if(!formData.scheduleType){
+      toast.error('Enter report schedule type');
       return;
     }
     formData["creator"] = currentUser.username;

@@ -14,7 +14,8 @@ export const localeOptions = [
   { id: 'es', name: 'Español', direction: 'ltr' },
   { id: 'enrtl', name: 'English - RTL', direction: 'rtl' },
 ];
-export const baseUrl = 'https://gps.cnet.com.ng/api'
+export const baseUrl = 'https://gps.cnet.com.ng/api';
+//export const baseUrl = 'http://104.155.233.3/api'
 //export const serverUrl = 'http://127.0.0.1:8083'
 export const serverUrl = '/report-server'
 export const firebaseConfig = {
