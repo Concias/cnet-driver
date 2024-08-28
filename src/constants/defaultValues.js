@@ -14,10 +14,10 @@ export const localeOptions = [
   { id: 'es', name: 'Español', direction: 'ltr' },
   { id: 'enrtl', name: 'English - RTL', direction: 'rtl' },
 ];
-export const baseUrl = 'https://gps.cnet.com.ng/api';
-//export const baseUrl = 'http://104.155.233.3/api'
-//export const serverUrl = 'http://127.0.0.1:8083'
-export const serverUrl = '/report-server'
+//export const baseUrl = 'https://gps.cnet.com.ng/api';
+export const baseUrl = 'http://104.155.233.3/api';
+export const serverUrl = 'http://127.0.0.1:8083';
+//export const serverUrl = '/report-server'
 export const firebaseConfig = {
   apiKey: 'AIzaSyBBksq-Asxq2M4Ot-75X19IyrEYJqNBPcg',
   authDomain: 'gogo-react-login.firebaseapp.com',
@@ -47,7 +47,7 @@ export const defaultColor = 'light.bluenavy';
 export const isDarkSwitchActive = false;
 export const defaultDirection = 'ltr';
 export const themeRadiusStorageKey = '__theme_radius';
-export const isAuthGuardActive = true;
+export const isAuthGuardActive = false;
 export const colors = [
   'bluenavy',
   'blueyale',

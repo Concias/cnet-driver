@@ -240,6 +240,7 @@ const ReportSchedule = (props) => {
                       onChange={(x) => setFormData({ ...formData, reportName: x.value })}
                       options={[{ label: "Co2 Summary Report", value: "CO2_SUMMARY_REPORT" },
                       { label: "Harsh Event Summary Report", value: "HARSH_EVENT_SUMMARY_REPORT" },
+                      { label: "Device Month Till Date Report", value: "DEVICE_MONTH_TILL_DATE_REPORT" },
                       { label: "Score Card Summary Report", value: "SCORE_CARD_SUMMARY_REPORT" }]}
                       required
                     />
