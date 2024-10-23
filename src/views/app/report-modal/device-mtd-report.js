@@ -60,14 +60,13 @@ const DeviceMTDReport = (props) => {
 
           let reportFormat = 'application/'+(data.reportFormat).toLowerCase();
     if(reportFormat === 'application/excel'){
-        reportFormat = 'application/vnd.ms-excel';
+        reportFormat = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
     }
     if(reportFormat === 'application/csv'){
         reportFormat = 'text/csv';
     }
     console.log(reportFormat);
     setDownloading(true);
-    console.log('setting')
     axios
         .post(`${serverUrl}/api/generate-report`, data, {responseType: 'arraybuffer'})
         .then(response => {
@@ -83,7 +82,6 @@ const DeviceMTDReport = (props) => {
         })
         .catch(error => {
             setDownloading(false);
-            console.log(error);
         });
       }
 

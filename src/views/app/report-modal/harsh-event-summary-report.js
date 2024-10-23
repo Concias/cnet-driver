@@ -61,7 +61,7 @@ const HarshEventSummaryReport = (props) => {
 
           let reportFormat = 'application/'+(data.reportFormat).toLowerCase();
     if(reportFormat === 'application/excel'){
-        reportFormat = 'application/vnd.ms-excel';
+        reportFormat = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
     }
     if(reportFormat === 'application/csv'){
         reportFormat = 'text/csv';

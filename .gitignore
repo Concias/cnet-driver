@@ -63,3 +63,4 @@ typings/
 build/
 .DS_Store
 .history
+build.zip
